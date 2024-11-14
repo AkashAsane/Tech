@@ -55,7 +55,7 @@ const UserList = () => {
 
   const totalPages = Math.ceil(users.length / usersPerPage);
   const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+    user.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
   const startIndex = (currentPage - 1) * usersPerPage;
   const paginatedUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage);
@@ -74,7 +74,6 @@ const UserList = () => {
         </button>
       </div>
 
-   
       <div className="mb-4">
         <input
           type="text"
@@ -103,27 +102,29 @@ const UserList = () => {
               </thead>
               <tbody>
                 {paginatedUsers.map(user => (
-                  <tr key={user.id} className="border-t hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">{user.id}</td>
-                    <td className="px-6 py-4">{user.name}</td>
-                    <td className="px-6 py-4">{user.username}</td>
-                    <td className="px-6 py-4">{user.email}</td>
-                    <td className="px-6 py-4">{user.company.name}</td>
-                    <td className="px-6 py-4 flex space-x-2">
-                      <button
-                        onClick={() => handleEditUser(user.id)}
-                        className="bg-rose-700 text-white px-3 py-1 rounded-md text-xs hover:bg-blue-600"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(user.id)}
-                        className="bg-teal-500 text-white px-3 py-1 rounded-md text-xs hover:bg-red-600"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
+                  user ? (
+                    <tr key={user.id} className="border-t hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4">{user.id || 'N/A'}</td>
+                      <td className="px-6 py-4">{user.name || 'No Name'}</td>
+                      <td className="px-6 py-4">{user.username || 'N/A'}</td>
+                      <td className="px-6 py-4">{user.email || 'N/A'}</td>
+                      <td className="px-6 py-4">{user.company.name}</td>
+                      <td className="px-6 py-4 flex space-x-2">
+                        <button
+                          onClick={() => handleEditUser(user.id)}
+                          className="bg-blue-500 text-white px-3 py-1 rounded-md text-xs hover:bg-blue-600"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(user.id)}
+                          className="bg-teal-500 text-white px-3 py-1 rounded-md text-xs hover:bg-red-600"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ) : null
                 ))}
               </tbody>
             </table>
@@ -138,11 +139,11 @@ const UserList = () => {
               Previous
             </button>
             <span className="text-gray-600">
-              Page {currentPage} of {Math.ceil(filteredUsers.length / usersPerPage)}
+              Page {currentPage} of {totalPages}
             </span>
             <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredUsers.length / usersPerPage)))}
-              disabled={currentPage === Math.ceil(filteredUsers.length / usersPerPage)}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
               className="px-4 py-2 bg-gray-300 text-gray-600 rounded-md disabled:bg-gray-200"
             >
               Next
